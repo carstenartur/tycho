@@ -6,6 +6,13 @@ If you are reading this in the browser, then you can quickly jump to specific ve
 
 ## 5.0.0 (under development)
 
+### Configure Maven coordinate mapping from p2 metadata
+
+The `p2MavenMetadataHandling` parameter of `target-platform-configuration` is now read correctly.
+The default remains `validate`, which checks that Maven artifacts advertised in p2 metadata can be resolved before using their coordinates.
+Use `inject` to use the coordinates without this validation, or `ignore` to retain p2 dependencies with system scope and avoid the validation requests.
+See [Maven coordinates in p2 metadata](src/site/markdown/TargetPlatform.md#maven-coordinates-in-p2-metadata) for details.
+
 ## support bumping maven target locations
 
 The `tycho-version-bump-plugin:update-target` now also supports bumping maven target locations to the latest version.

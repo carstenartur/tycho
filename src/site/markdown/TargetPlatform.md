@@ -85,6 +85,33 @@ See https://www.eclipse.org/tycho/sitedocs/target-platform-configuration/target-
 
 For an example, see the POM of this [demo project](https://github.com/eclipse-tycho/tycho/tree/master/demo/itp02/build02).
 
+### Maven coordinates in p2 metadata
+
+p2 repositories can advertise Maven coordinates for their artifacts. Tycho uses this metadata when it represents the resolved p2 dependencies in the Maven project model, which makes them available to Maven plugins that do not understand p2.
+
+The `p2MavenMetadataHandling` parameter of `target-platform-configuration` controls this mapping:
+
+| Value | Behavior |
+| --- | --- |
+| `validate` (default) | Resolve the advertised Maven artifact before using its coordinates. If it cannot be resolved, retain the p2 dependency with system scope. Validation can cause additional Maven repository requests. |
+| `inject` | Use the advertised Maven coordinates without validating the Maven artifact first. Subsequent Maven plugins can still resolve those dependencies and may fail if the coordinates are unavailable. |
+| `ignore` | Represent the dependencies with p2 coordinates and system scope, without validating or injecting the advertised Maven coordinates. |
+
+For example, to disable the Maven coordinate mapping:
+
+```xml
+<plugin>
+   <groupId>org.eclipse.tycho</groupId>
+   <artifactId>target-platform-configuration</artifactId>
+   <version>${tycho-version}</version>
+   <configuration>
+      <p2MavenMetadataHandling>ignore</p2MavenMetadataHandling>
+   </configuration>
+</plugin>
+```
+
+This setting controls the representation of p2 dependencies in the Maven model. The target platform content and the resolution of Maven target locations or POM dependencies are configured separately.
+
 ## Effective content of the target platform
 
 In case multiple target platform configuration approaches are combined, the target platform contains the union of the content defined through each approach.
