@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2020, 2022 Red Hat Inc. and others.
+ * Copyright (c) 2020, 2026 Red Hat Inc. and others.
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License 2.0
  * which accompanies this distribution, and is available at
@@ -23,6 +23,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.eclipse.tycho.TargetEnvironment;
 import org.eclipse.tycho.core.TargetPlatformConfiguration.BREEHeaderSelectionPolicy;
+import org.eclipse.tycho.core.TargetPlatformConfiguration.InjectP2MavenMetadataHandling;
 import org.eclipse.tycho.core.resolver.DefaultTargetPlatformConfigurationReader;
 import org.eclipse.tycho.core.resolver.shared.IncludeSourceMode;
 import org.eclipse.tycho.core.resolver.shared.PomDependencies;
@@ -253,6 +254,17 @@ public class TargetPlatformConfigurationMojo extends AbstractMojo {
      */
     @Parameter(name = DefaultTargetPlatformConfigurationReader.REFERENCED_REPOSITORY_MODE)
     private ReferencedRepositoryMode referencedRepositoryMode;
+
+    /**
+     * Controls how Maven coordinates from p2 metadata are represented in the Maven dependency
+     * model. The default, <code>validate</code>, resolves the advertised Maven artifact first and
+     * falls back to a p2 system dependency if resolution fails. <code>inject</code> uses the Maven
+     * coordinates without this validation; later Maven dependency resolution can still fail if
+     * the artifact is unavailable. <code>ignore</code> keeps p2 system dependencies without
+     * validating Maven coordinates. This setting does not change target-platform content.
+     */
+    @Parameter(name = DefaultTargetPlatformConfigurationReader.P2_MAVEN_METADATA_HANDLING, defaultValue = "validate")
+    private InjectP2MavenMetadataHandling p2MavenMetadataHandling;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
